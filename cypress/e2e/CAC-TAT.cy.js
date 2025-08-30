@@ -7,6 +7,7 @@ describe('Central de Atendimento ao cliente TAT', () => {
       cy.title().should('be.equal','Central de Atendimento ao Cliente TAT')
     })
     it('preenche os campos obrigatoriose envia o formulario',()=>{
+      cy.clock()
       const longText = Cypress._.repeat('abcdefghijklmnopqrstvuxz',10)
       cy.get('#firstName').type('Nuno Miguel')
       cy.get('#lastName').type('Maia')
@@ -16,6 +17,9 @@ describe('Central de Atendimento ao cliente TAT', () => {
       cy.contains('button','Enviar').click()
 
       cy.get('.success').should('be.visible')
+
+      cy.tick(3000)
+      cy.get('.success').should('not.be.visible')
      })
      it('Exibe mensagem de erro ao submeter o formulário com um email com formatação inválida',()=>{    
       cy.get('#firstName').type('Nuno Miguel')
@@ -166,8 +170,25 @@ describe('Central de Atendimento ao cliente TAT', () => {
 
         })
         
-        
+        it('preenche o campo da área de texto usando o comando invoke',()=>{
+          cy.get('#open-text-area')
+            .invoke('val','um texto qualquer')
+            .should('have.value','um texto qualquer')
+        })
+        it('faz uma requisição http', ()=>{
+          cy.request('https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html')
+            .as('getRequest')
+            .its('status')
+            .should('be.equal',200)
+          cy.get('@getRequest')
+          .its('statusText')
+          .should('be.equal','OK')
+          cy.get('@getRequest')
+          .its('body')
+          .should('include','CAC TAT') // tambem funciona com contains
 
+
+        })
  })
 
   
