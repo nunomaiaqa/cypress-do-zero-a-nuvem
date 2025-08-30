@@ -186,6 +186,14 @@ describe('Central de Atendimento ao cliente TAT', () => {
           cy.get('@getRequest')
           .its('body')
           .should('include','CAC TAT') // tambem funciona com contains
+        })
+
+        it('mostrar o gato',()=>{
+          cy.get('#cat')
+          .invoke('show')
+          .should('be.visible')
+          cy.get('#title')
+          .invoke('text','CAT TAT')
 
 
         })
